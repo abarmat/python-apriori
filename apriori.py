@@ -40,7 +40,7 @@ def freq_itemset(transaction_list, c_itemset, min_support):
         l_itemset = itemset_support(transaction_list, c_itemset, min_support)
         if not l_itemset:
             break
-        f_itemset = dict(f_itemset, **l_itemset)
+        f_itemset.update(l_itemset)
         k += 1
 
     return f_itemset    
@@ -62,8 +62,7 @@ def apriori(data, min_support, min_confidence):
                 if B:
                     A = frozenset(A)
                     AB = A | B
-                    support = itemset_support(transaction_list, [AB, A])
-                    confidence = float(support[AB]) / support[A]
+                    confidence = float(f_itemset[AB]) / f_itemset[A]
                     if confidence >= min_confidence:
                         rules.append((A, B, confidence))    
     return rules, f_itemset
