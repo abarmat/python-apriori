@@ -21,7 +21,7 @@ def itemset_from_data(data):
     return itemset, transaction_list
 
 
-def itemset_with_min_support(transaction_list, itemset, min_support):
+def itemset_support(transaction_list, itemset, min_support=0):
     len_transaction_list = len(transaction_list)
     l = [
         (item, float(sum(1 for row in transaction_list if item.issubset(row)))/len_transaction_list) 
@@ -37,7 +37,7 @@ def freq_itemset(transaction_list, c_itemset, min_support):
     while True:
         if k > 1:
             c_itemset = joinset(l_itemset, k)
-        l_itemset = itemset_with_min_support(transaction_list, c_itemset, min_support)
+        l_itemset = itemset_support(transaction_list, c_itemset, min_support)
         if not l_itemset:
             break
         f_itemset = dict(f_itemset, **l_itemset)
@@ -62,7 +62,7 @@ def apriori(data, min_support, min_confidence):
                 if B:
                     A = frozenset(A)
                     AB = A | B
-                    support = itemset_with_min_support(transaction_list, [AB, A], 0)
+                    support = itemset_support(transaction_list, [AB, A])
                     confidence = float(support[AB]) / support[A]
                     if confidence >= min_confidence:
                         rules.append((A, B, confidence))    
